@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v1.0.1
+
+- :rocket: Initial Approach
+
 ### v1.0.0
 
 - :rocket: Initial Approach
