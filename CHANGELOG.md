@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v1.0.2
+
+- :rocket: Require API Token
+
 ### v1.0.1
 
 - :rocket: Initial Approach
