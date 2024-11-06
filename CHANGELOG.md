@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v1.2.0
+
+- :rocket: Wire up per API Spec
+
 ### v1.1.0
 
 - :rocket: Require API Token
