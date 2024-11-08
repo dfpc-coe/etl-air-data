@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v1.3.0
+
+- :rocket: Update to support Video Streams
+
 ### v1.2.0
 
 - :rocket: Wire up per API Spec

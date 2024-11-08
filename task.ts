@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import { Type, TSchema } from '@sinclair/typebox';
 import { FeatureCollection, Feature } from 'geojson';
 import type { Event } from '@tak-ps/etl';
@@ -54,12 +55,33 @@ export default class Task extends ETL {
             // Not sure what to use as a persistant ID so using the sid URL param for now
             const share = new URL(stream.shareLink);
 
+            const uuid = crypto.randomUUID();
+            const callsign = `UAS: ${stream.pilotFullName}`
+
             features.push({
                 id: `airdata-${share.searchParams.get('sid')}`,
                 type: 'Feature',
                 properties: {
-                    callsign: `UAS: ${stream.pilotFullName}`,
-                    metadata: stream
+                    type: 'a-f-A-C-F-q',
+                    callsign,
+                    metadata: stream,
+                    video: {
+                        uid: uuid,
+                        url: stream.rtmpURL,
+                        config: {
+                            uid: uuid,
+                            address: stream.rtmpURL,
+                            networkTimeout: 12000,
+                            path: "",
+                            protocol: "raw",
+                            bufferTime: -1,
+                            port: -1,
+                            roverPort: -1,
+                            rtspReliable: 0,
+                            ignoreEmbeddedKLV: false,
+                            alias: callsign
+                        }
+                    }
                 },
                 geometry: {
                     type: 'Point',
