@@ -1,4 +1,3 @@
-import crypto from 'node:crypto';
 import { Type, TSchema } from '@sinclair/typebox';
 import { FeatureCollection, Feature } from 'geojson';
 import type { Event } from '@tak-ps/etl';
@@ -49,27 +48,34 @@ export default class Task extends ETL {
             }
         });
 
+        const now = +new Date();
         const streams = await res.typed(Type.Array(OutputSchema));
 
         for (const stream of streams) {
             // Not sure what to use as a persistant ID so using the sid URL param for now
             const share = new URL(stream.shareLink);
 
-            const uuid = crypto.randomUUID();
             const callsign = `UAS: ${stream.pilotFullName}`
+
+
+            if (
+                stream.lastStopped
+                && stream.lastStopped > stream.lastStarted
+                && stream.lastStopped * 1000 < (now - 600000) // now - 10min (ms)
+            ) continue;
 
             features.push({
                 id: `airdata-${share.searchParams.get('sid')}`,
                 type: 'Feature',
                 properties: {
-                    type: 'a-f-A-C-F-q',
+                    type: 'a-f-A-M',
                     callsign,
                     metadata: stream,
                     video: {
-                        uid: uuid,
+                        uid: `airdata-${share.searchParams.get('sid')}-video`,
                         url: stream.rtmpURL,
                         config: {
-                            uid: uuid,
+                            uid: `airdata-${share.searchParams.get('sid')}-video`,
                             address: stream.rtmpURL,
                             networkTimeout: 12000,
                             path: "",
