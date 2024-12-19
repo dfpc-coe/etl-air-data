@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v1.6.0
+
+- :rocket: Add ETL Name as static field
+
 ### v1.5.0
 
 - :rocket: Update Connection Config

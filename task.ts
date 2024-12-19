@@ -27,6 +27,8 @@ const OutputSchema = Type.Object({
 });
 
 export default class Task extends ETL {
+    static name = 'etl-air-data';
+
     async schema(type: SchemaType = SchemaType.Input): Promise<TSchema> {
         if (type === SchemaType.Input) {
             return InputSchema;
