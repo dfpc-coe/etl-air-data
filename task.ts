@@ -60,7 +60,7 @@ export default class Task extends ETL {
 
 
             if (
-                stream.lastStopped
+                typeof stream.lastStopped === 'number'
                 && stream.lastStopped > stream.lastStarted
                 && stream.lastStopped * 1000 < (now - 600000) // now - 10min (ms)
             ) continue;

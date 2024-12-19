@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v1.6.2
+
+- :bug: Fix a couple of build bugs
+
 ### v1.6.1
 
 - :rocket: Last stopped can be a boolean
