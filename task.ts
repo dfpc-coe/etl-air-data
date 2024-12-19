@@ -20,8 +20,8 @@ const OutputSchema = Type.Object({
     shareLink: Type.String(),
     shareLinkPreviewImg: Type.String(),
     rtmpURL: Type.String(),
-    lastStarted: Type.Integer(),
-    lastStopped: Type.Integer(),
+    lastStarted: Type.Optional(Type.Integer()),
+    lastStopped: Type.Union([Type.Integer(), Type.Boolean()]),
     latitude: Type.Number(),
     longitude: Type.Number()
 });

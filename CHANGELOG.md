@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v1.6.1
+
+- :rocket: Last stopped can be a boolean
+
 ### v1.6.0
 
 - :rocket: Add ETL Name as static field
