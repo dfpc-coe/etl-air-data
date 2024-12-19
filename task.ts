@@ -1,7 +1,6 @@
-import { Type, TSchema } from '@sinclair/typebox';
-import { FeatureCollection, Feature } from 'geojson';
+import { Static, Type, TSchema } from '@sinclair/typebox';
 import type { Event } from '@tak-ps/etl';
-import ETL, { SchemaType, handler as internal, local, env, fetch } from '@tak-ps/etl';
+import ETL, { SchemaType, handler as internal, local, fetch, InputFeatureCollection, InputFeature} from '@tak-ps/etl';
 
 const InputSchema = Type.Object({
     'API Token': Type.String({
@@ -40,7 +39,7 @@ export default class Task extends ETL {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Get the Environment from the Server and ensure it conforms to the schema
         const env = await this.env(InputSchema);
 
-        const features: Feature[] = [];
+        const features: Static<typeof InputFeature>[] = [];
 
         const res = await fetch('https://api.airdata.com/broadcasts/recent', {
             headers: {
@@ -74,11 +73,12 @@ export default class Task extends ETL {
                     video: {
                         uid: `airdata-${share.searchParams.get('sid')}-video`,
                         url: stream.rtmpURL,
-                        config: {
+                        sensor: `airdata-${share.searchParams.get('sid')}-camera`,
+                        connection: {
                             uid: `airdata-${share.searchParams.get('sid')}-video`,
                             address: stream.rtmpURL,
                             networkTimeout: 12000,
-                            path: "",
+                            path: '',
                             protocol: "raw",
                             bufferTime: -1,
                             port: -1,
@@ -96,7 +96,7 @@ export default class Task extends ETL {
             })
         }
 
-        const fc: FeatureCollection = {
+        const fc: Static<typeof InputFeatureCollection> = {
             type: 'FeatureCollection',
             features: features
         }
@@ -105,9 +105,8 @@ export default class Task extends ETL {
     }
 }
 
-env(import.meta.url)
-await local(new Task(), import.meta.url);
+await local(new Task(import.meta.url), import.meta.url);
 export async function handler(event: Event = {}) {
-    return await internal(new Task(), event);
+    return await internal(new Task(import.meta.url), event);
 }
 

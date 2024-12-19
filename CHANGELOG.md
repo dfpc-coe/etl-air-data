@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v1.5.0
+
+- :rocket: Update Connection Config
+
 ### v1.4.0
 
 - :rocket: 10 Min Cutoff
