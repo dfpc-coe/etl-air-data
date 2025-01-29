@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v1.7.0
+
+- :rocket: Update to support capabilities
+
 ### v1.6.2
 
 - :bug: Fix a couple of build bugs

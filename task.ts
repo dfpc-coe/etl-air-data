@@ -1,6 +1,6 @@
 import { Static, Type, TSchema } from '@sinclair/typebox';
 import type { Event } from '@tak-ps/etl';
-import ETL, { SchemaType, handler as internal, local, fetch, InputFeatureCollection, InputFeature} from '@tak-ps/etl';
+import ETL, { SchemaType, handler as internal, local, fetch, InputFeatureCollection, InputFeature, DataFlowType, InvocationType } from '@tak-ps/etl';
 
 const InputSchema = Type.Object({
     'API Token': Type.String({
@@ -28,17 +28,25 @@ const OutputSchema = Type.Object({
 
 export default class Task extends ETL {
     static name = 'etl-air-data';
+    static flow = [ DataFlowType.Incoming ];
+    static invocation = [ InvocationType.Schedule ];
 
-    async schema(type: SchemaType = SchemaType.Input): Promise<TSchema> {
-        if (type === SchemaType.Input) {
-            return InputSchema;
+    async schema(
+        type: SchemaType = SchemaType.Input,
+        flow: DataFlowType = DataFlowType.Incoming
+    ): Promise<TSchema> {
+        if (flow === DataFlowType.Incoming) {
+            if (type === SchemaType.Input) {
+                return InputSchema;
+            } else {
+                return OutputSchema;
+            }
         } else {
-            return OutputSchema;
+            return Type.Object({});
         }
     }
 
     async control(): Promise<void> {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Get the Environment from the Server and ensure it conforms to the schema
         const env = await this.env(InputSchema);
 
         const features: Static<typeof InputFeature>[] = [];
