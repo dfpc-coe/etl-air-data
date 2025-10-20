@@ -1,6 +1,7 @@
 import { Static, Type, TSchema } from '@sinclair/typebox';
+import { Feature } from '@tak-ps/node-cot'
 import type { Event } from '@tak-ps/etl';
-import ETL, { SchemaType, handler as internal, local, fetch, InputFeatureCollection, InputFeature, DataFlowType, InvocationType } from '@tak-ps/etl';
+import ETL, { SchemaType, handler as internal, local, fetch, DataFlowType, InvocationType } from '@tak-ps/etl';
 
 const InputSchema = Type.Object({
     'API Token': Type.String({
@@ -49,7 +50,7 @@ export default class Task extends ETL {
     async control(): Promise<void> {
         const env = await this.env(InputSchema);
 
-        const features: Static<typeof InputFeature>[] = [];
+        const features: Static<typeof Feature.InputFeature>[] = [];
 
         const res = await fetch('https://api.airdata.com/broadcasts/recent', {
             headers: {
@@ -106,7 +107,7 @@ export default class Task extends ETL {
             })
         }
 
-        const fc: Static<typeof InputFeatureCollection> = {
+        const fc: Static<typeof Feature.InputFeatureCollection> = {
             type: 'FeatureCollection',
             features: features
         }
