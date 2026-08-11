@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v2.11.0
+
+- :arrow_up: Update GH Actions
+
 ### v2.10.0
 
 - :arrow_up: Update Core Dependencies
