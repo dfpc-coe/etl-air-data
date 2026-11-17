@@ -36,15 +36,9 @@ export default class Task extends ETL {
         type: SchemaType = SchemaType.Input,
         flow: DataFlowType = DataFlowType.Incoming
     ): Promise<TSchema> {
-        if (flow === DataFlowType.Incoming) {
-            if (type === SchemaType.Input) {
-                return InputSchema;
-            } else {
-                return OutputSchema;
-            }
-        } else {
-            return Type.Object({});
-        }
+        if (flow !== DataFlowType.Incoming) return Type.Object({});
+
+        return type === SchemaType.Input ? InputSchema : OutputSchema;
     }
 
     async control(): Promise<void> {
@@ -58,7 +52,7 @@ export default class Task extends ETL {
             }
         });
 
-        const now = +new Date();
+        const tenMinutesAgo = Date.now() - 600000;
         const streams = await res.typed(Type.Array(OutputSchema));
 
         for (const stream of streams) {
@@ -72,7 +66,7 @@ export default class Task extends ETL {
                 typeof stream.lastStopped === 'number'
                 && typeof stream.lastStarted === 'number'
                 && stream.lastStopped > stream.lastStarted
-                && stream.lastStopped * 1000 < (now - 600000) // now - 10min (ms)
+                && stream.lastStopped * 1000 < tenMinutesAgo
             ) continue;
 
             features.push({
@@ -118,7 +112,7 @@ export default class Task extends ETL {
 }
 
 await local(await Task.init(import.meta.url), import.meta.url);
-export async function handler(event: Event = {}) {
-    return await internal(await Task.init(import.meta.url), event);
+export async function handler(event: Event = {}): ReturnType<typeof internal> {
+    return internal(await Task.init(import.meta.url), event);
 }
 
